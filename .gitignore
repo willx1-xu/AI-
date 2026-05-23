@@ -2,3 +2,11 @@ node_modules
 dist
 .env
 *.local
+.DS_Store
+Thumbs.db
+*.log
+.vite/
+dev-dist/
+coverage/
+*.tsbuildinfo
+

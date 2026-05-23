@@ -14,6 +14,7 @@ export default function App() {
         <Route path="/diet" element={<DietPage />} />
         <Route path="/body" element={<BodyPage />} />
         <Route path="/plan" element={<PlanPage />} />
+        <Route path="*" element={<Navigate to="/training" replace />} />
       </Route>
     </Routes>
   )
