@@ -129,34 +129,38 @@ export default function BodyPage() {
       {/* Modal form */}
       {showForm && (
         <div className="fixed inset-0 z-50 bg-black/60 flex items-end justify-center" onClick={() => setShowForm(false)}>
-          <div className="bg-gray-900 rounded-t-2xl w-full p-4 pb-safe" onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-bold">记录身体数据</h3>
-              <button onClick={() => setShowForm(false)} className="text-gray-400">关闭</button>
+          <div className="bg-gray-900 rounded-t-2xl w-full max-h-[85vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
+            <div className="p-4 pb-2">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-bold">记录身体数据</h3>
+                <button onClick={() => setShowForm(false)} className="text-gray-400">关闭</button>
+              </div>
+
+              <label className="text-xs text-gray-400">日期</label>
+              <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="w-full bg-gray-800 rounded-lg px-3 py-2 text-sm text-white mb-3 outline-none" />
+
+              <div className="grid grid-cols-2 gap-3">
+                {METRICS.map((m) => (
+                  <div key={m.key}>
+                    <label className="text-xs text-gray-400">{m.label} ({m.unit})</label>
+                    <input
+                      type="number"
+                      value={form[m.key as keyof typeof form]}
+                      onChange={(e) => setForm({ ...form, [m.key]: e.target.value })}
+                      placeholder={m.label}
+                      className="w-full bg-gray-800 rounded-lg px-3 py-2 text-sm text-white mt-1 outline-none"
+                      step="0.1"
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
 
-            <label className="text-xs text-gray-400">日期</label>
-            <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="w-full bg-gray-800 rounded-lg px-3 py-2 text-sm text-white mb-3 outline-none" />
-
-            <div className="grid grid-cols-2 gap-3">
-              {METRICS.map((m) => (
-                <div key={m.key}>
-                  <label className="text-xs text-gray-400">{m.label} ({m.unit})</label>
-                  <input
-                    type="number"
-                    value={form[m.key as keyof typeof form]}
-                    onChange={(e) => setForm({ ...form, [m.key]: e.target.value })}
-                    placeholder={m.label}
-                    className="w-full bg-gray-800 rounded-lg px-3 py-2 text-sm text-white mt-1 outline-none"
-                    step="0.1"
-                  />
-                </div>
-              ))}
+            <div className="px-4 pb-4 pb-safe mt-2">
+              <button onClick={handleSubmit} className="w-full bg-cyan-500 text-black py-3 rounded-lg font-semibold text-base">
+                保存
+              </button>
             </div>
-
-            <button onClick={handleSubmit} className="w-full bg-cyan-500 text-black py-2.5 rounded-lg font-semibold mt-4">
-              保存
-            </button>
           </div>
         </div>
       )}

@@ -239,7 +239,7 @@ export default function TrainingPage() {
       </div>
 
       {/* Rest timer display */}
-      <div className={`fixed bottom-16 right-4 z-40 ${restTimerActive ? 'block' : 'hidden'}`}>
+      <div className={`fixed bottom-32 right-4 z-50 ${restTimerActive ? 'block' : 'hidden'}`}>
         <div className="bg-gray-800/95 backdrop-blur rounded-full p-4 border border-gray-700 shadow-lg text-center">
           <div className="text-2xl font-mono font-bold text-cyan-400">
             {Math.floor(restSeconds / 60)}:{(restSeconds % 60).toString().padStart(2, '0')}
@@ -251,7 +251,7 @@ export default function TrainingPage() {
       {/* Rest timer trigger button */}
       <button
         onClick={() => (restTimerActive ? setRestTimerActive(false) : startRestTimer())}
-        className="fixed bottom-20 right-4 z-40 w-12 h-12 bg-cyan-500 text-black rounded-full flex items-center justify-center text-sm font-bold shadow-lg active:scale-95 transition-transform"
+        className="fixed bottom-24 right-4 z-50 w-12 h-12 bg-cyan-500 text-black rounded-full flex items-center justify-center text-sm font-bold shadow-lg active:scale-95 transition-transform"
       >
         {restTimerActive ? '⏹' : '⏱'}
       </button>
