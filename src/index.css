@@ -5,12 +5,19 @@
   --sab: env(safe-area-inset-bottom, 0px);
   --sal: env(safe-area-inset-left, 0px);
   --sar: env(safe-area-inset-right, 0px);
+
+  --neon-training: #00ff88;
+  --neon-diet: #ff6b35;
+  --neon-body: #00d4ff;
+  --neon-plan: #a855f7;
+  --neon-dashboard: #ffffff;
 }
 
 html, body, #root {
   height: 100dvh;
   overflow: hidden;
   overscroll-behavior: none;
+  background: #000000;
 }
 
 .pt-safe { padding-top: var(--sat); }
@@ -21,3 +28,31 @@ html, body, #root {
 * {
   -webkit-tap-highlight-color: transparent;
 }
+
+/* Glass morphism */
+.glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-card {
+  background: rgba(10, 10, 10, 0.8);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+}
+
+/* Neon glow utilities */
+.neon-glow-green { box-shadow: 0 0 12px rgba(0, 255, 136, 0.5), 0 0 24px rgba(0, 255, 136, 0.2); }
+.neon-glow-orange { box-shadow: 0 0 12px rgba(255, 107, 53, 0.5), 0 0 24px rgba(255, 107, 53, 0.2); }
+.neon-glow-blue { box-shadow: 0 0 12px rgba(0, 212, 255, 0.5), 0 0 24px rgba(0, 212, 255, 0.2); }
+.neon-glow-purple { box-shadow: 0 0 12px rgba(168, 85, 247, 0.5), 0 0 24px rgba(168, 85, 247, 0.2); }
+.neon-glow-white { box-shadow: 0 0 12px rgba(255, 255, 255, 0.4), 0 0 24px rgba(255, 255, 255, 0.15); }
+
+.neon-text-green { text-shadow: 0 0 8px rgba(0, 255, 136, 0.6); }
+.neon-text-orange { text-shadow: 0 0 8px rgba(255, 107, 53, 0.6); }
+.neon-text-blue { text-shadow: 0 0 8px rgba(0, 212, 255, 0.6); }
+.neon-text-purple { text-shadow: 0 0 8px rgba(168, 85, 247, 0.6); }

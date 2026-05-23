@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { motion } from 'framer-motion'
 import { useWorkoutStore, type Exercise, type Workout } from '../stores/useWorkoutStore'
 
 const BODY_PARTS = ['胸', '背', '肩', '腿', '手臂', '核心']
@@ -19,6 +20,8 @@ function getWeekDates(weekOffset: number) {
 function todayStr() {
   return new Date().toISOString().slice(0, 10)
 }
+
+const NEON = '#00ff88'
 
 export default function TrainingPage() {
   const [weekOffset, setWeekOffset] = useState(0)
@@ -72,16 +75,16 @@ export default function TrainingPage() {
   return (
     <div className="flex flex-col h-full">
       {/* Week navigator */}
-      <div className="flex items-center justify-between px-4 py-2 bg-gray-900/80">
-        <button onClick={() => setWeekOffset((w) => w - 1)} className="text-cyan-400 text-lg px-2">&lt;</button>
+      <div className="flex items-center justify-between px-4 py-3">
+        <button onClick={() => setWeekOffset((w) => w - 1)} className="text-[#00ff88] text-lg px-2">&lt;</button>
         <span className="text-sm text-gray-300">
           {formatDate(weekDates[0])} - {formatDate(weekDates[6])}
         </span>
-        <button onClick={() => setWeekOffset((w) => w + 1)} className="text-cyan-400 text-lg px-2">&gt;</button>
+        <button onClick={() => setWeekOffset((w) => w + 1)} className="text-[#00ff88] text-lg px-2">&gt;</button>
       </div>
 
       {/* Day selector */}
-      <div className="flex px-1 py-2 bg-gray-900/80 border-b border-gray-800">
+      <div className="flex px-1 py-2 border-b border-white/5">
         {weekDates.map((date) => {
           const isToday = date === todayStr()
           const isSelected = date === selectedDate
@@ -91,13 +94,18 @@ export default function TrainingPage() {
             <button
               key={date}
               onClick={() => setSelectedDate(date)}
-              className={`flex-1 flex flex-col items-center py-1 rounded-lg text-xs transition-colors ${
-                isSelected ? 'bg-cyan-500/20 text-cyan-400' : isToday ? 'text-white' : 'text-gray-400'
-              }`}
+              className="flex-1 flex flex-col items-center py-1.5 rounded-xl text-xs transition-all duration-200"
+              style={
+                isSelected
+                  ? { color: NEON, textShadow: `0 0 8px ${NEON}` }
+                  : isToday ? { color: '#ffffff' } : { color: '#6b7280' }
+              }
             >
               <span>{DAY_LABELS[d.getDay()]}</span>
-              <span className="text-sm font-medium">{formatDate(date)}</span>
-              {hasWorkout && <span className="w-1 h-1 rounded-full bg-cyan-400 mt-0.5" />}
+              <span className="text-sm font-medium mt-0.5">{formatDate(date)}</span>
+              {hasWorkout && (
+                <div className="w-1.5 h-1.5 rounded-full mt-1" style={{ background: NEON, boxShadow: `0 0 6px ${NEON}` }} />
+              )}
             </button>
           )
         })}
@@ -105,9 +113,9 @@ export default function TrainingPage() {
 
       {/* Selected day content */}
       <div className="flex-1 overflow-y-auto p-4">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold">{selectedDate} 训练记录</h2>
-        </div>
+        <h2 className="text-lg font-extrabold mb-4" style={{ color: NEON }}>
+          {selectedDate} 训练记录
+        </h2>
 
         {/* Body part selector */}
         <div className="flex flex-wrap gap-2 mb-4">
@@ -115,9 +123,12 @@ export default function TrainingPage() {
             <button
               key={bp}
               onClick={() => setSelectedBodyPart(bp === selectedBodyPart ? '' : bp)}
-              className={`px-3 py-1.5 rounded-full text-sm transition-colors ${
-                bp === selectedBodyPart ? 'bg-cyan-500 text-white' : 'bg-gray-800 text-gray-300'
-              }`}
+              className="px-3 py-1.5 rounded-full text-sm transition-all duration-200"
+              style={
+                bp === selectedBodyPart
+                  ? { background: NEON, color: '#000', fontWeight: 600 }
+                  : { background: 'rgba(255,255,255,0.05)', color: '#9ca3af' }
+              }
             >
               {bp}
             </button>
@@ -130,7 +141,12 @@ export default function TrainingPage() {
               }
             }}
             disabled={!selectedBodyPart}
-            className="px-3 py-1.5 rounded-full text-sm bg-cyan-500/30 text-cyan-400 disabled:opacity-30"
+            className="px-3 py-1.5 rounded-full text-sm font-semibold transition-all"
+            style={{
+              background: selectedBodyPart ? `${NEON}20` : 'rgba(255,255,255,0.03)',
+              color: selectedBodyPart ? NEON : '#4b5563',
+              opacity: selectedBodyPart ? 1 : 0.3,
+            }}
           >
             + 添加训练
           </button>
@@ -138,29 +154,30 @@ export default function TrainingPage() {
 
         {/* Workouts for selected date */}
         {dayWorkouts.length === 0 && (
-          <p className="text-gray-500 text-center py-8">选择部位后点击"+ 添加训练"开始记录</p>
+          <p className="text-gray-600 text-center py-10">选择部位后点击"+ 添加训练"开始记录</p>
         )}
 
         {dayWorkouts.map((workout: Workout) => (
-          <div key={workout.id} className="mb-4 bg-gray-800/50 rounded-xl p-3">
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="font-semibold text-cyan-400">{workout.bodyPart}</h3>
-              <button
-                onClick={() => removeWorkout(workout.id)}
-                className="text-red-400 text-xs"
-              >
-                删除
-              </button>
+          <motion.div
+            key={workout.id}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-4 glass-card p-4"
+          >
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-bold text-base" style={{ color: NEON }}>{workout.bodyPart}</h3>
+              <button onClick={() => removeWorkout(workout.id)} className="text-red-400 text-xs">删除</button>
             </div>
 
             {/* Templates quick-add */}
             {getTemplatesByBodyPart(workout.bodyPart).length > 0 && (
-              <div className="flex flex-wrap gap-1 mb-2">
+              <div className="flex flex-wrap gap-1 mb-3">
                 {getTemplatesByBodyPart(workout.bodyPart).map((t) => (
                   <button
                     key={t.id}
                     onClick={() => handleAddTemplateQuick(workout.id, t.name)}
-                    className="px-2 py-0.5 text-xs bg-gray-700 rounded-full text-gray-300 hover:bg-cyan-500/20 hover:text-cyan-400"
+                    className="px-2 py-0.5 text-xs rounded-full transition-all"
+                    style={{ background: 'rgba(255,255,255,0.05)', color: '#9ca3af' }}
                   >
                     + {t.name}
                   </button>
@@ -170,7 +187,7 @@ export default function TrainingPage() {
 
             {/* Exercises */}
             {workout.exercises.map((ex: Exercise) => (
-              <div key={ex.id} className="flex items-center gap-2 py-1.5 border-b border-gray-700/50 last:border-0">
+              <div key={ex.id} className="flex items-center gap-2 py-2 border-b border-white/5 last:border-0">
                 <input
                   value={ex.exerciseName}
                   onChange={(e) => updateExercise(workout.id, ex.id, { exerciseName: e.target.value })}
@@ -181,7 +198,7 @@ export default function TrainingPage() {
                   type="number"
                   value={ex.sets}
                   onChange={(e) => updateExercise(workout.id, ex.id, { sets: parseInt(e.target.value) || 0 })}
-                  className="w-10 bg-gray-700 rounded text-center text-sm text-white"
+                  className="w-10 bg-white/5 rounded-lg text-center text-sm text-white outline-none"
                   placeholder="组"
                 />
                 <span className="text-gray-600 text-xs">组</span>
@@ -189,7 +206,7 @@ export default function TrainingPage() {
                   type="number"
                   value={ex.reps}
                   onChange={(e) => updateExercise(workout.id, ex.id, { reps: parseInt(e.target.value) || 0 })}
-                  className="w-10 bg-gray-700 rounded text-center text-sm text-white"
+                  className="w-10 bg-white/5 rounded-lg text-center text-sm text-white outline-none"
                   placeholder="次"
                 />
                 <span className="text-gray-600 text-xs">次</span>
@@ -197,7 +214,7 @@ export default function TrainingPage() {
                   type="number"
                   value={ex.weightKg || ''}
                   onChange={(e) => updateExercise(workout.id, ex.id, { weightKg: parseFloat(e.target.value) || 0 })}
-                  className="w-14 bg-gray-700 rounded text-center text-sm text-white"
+                  className="w-14 bg-white/5 rounded-lg text-center text-sm text-white outline-none"
                   placeholder="kg"
                 />
                 <span className="text-gray-600 text-xs">kg</span>
@@ -212,14 +229,15 @@ export default function TrainingPage() {
 
             <button
               onClick={() => handleAddExercise(workout.id)}
-              className="mt-2 text-xs text-cyan-400 py-1"
+              className="mt-3 text-sm py-1.5 w-full rounded-lg transition-colors"
+              style={{ color: NEON, background: `${NEON}10` }}
             >
               + 添加动作
             </button>
 
             {/* Save as template */}
             {workout.exercises.some((e) => e.exerciseName) && (
-              <div className="mt-2 pt-2 border-t border-gray-700">
+              <div className="mt-3 pt-3 border-t border-white/5">
                 <button
                   onClick={() => {
                     workout.exercises.forEach((e) => {
@@ -228,33 +246,49 @@ export default function TrainingPage() {
                       }
                     })
                   }}
-                  className="text-xs text-gray-500 hover:text-cyan-400"
+                  className="text-xs text-gray-500 hover:text-gray-300 transition-colors"
                 >
                   保存动作为模板
                 </button>
               </div>
             )}
-          </div>
+          </motion.div>
         ))}
       </div>
 
       {/* Rest timer display */}
       <div className={`fixed bottom-32 right-4 z-50 ${restTimerActive ? 'block' : 'hidden'}`}>
-        <div className="bg-gray-800/95 backdrop-blur rounded-full p-4 border border-gray-700 shadow-lg text-center">
-          <div className="text-2xl font-mono font-bold text-cyan-400">
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          className="glass rounded-full p-4 text-center"
+          style={{ borderColor: `${NEON}30`, boxShadow: `0 0 20px ${NEON}30` }}
+        >
+          <div className="text-2xl font-mono font-bold" style={{ color: NEON }}>
             {Math.floor(restSeconds / 60)}:{(restSeconds % 60).toString().padStart(2, '0')}
           </div>
-          <button onClick={() => { if (intervalId) clearInterval(intervalId); setRestTimerActive(false) }} className="text-xs text-gray-400 mt-1">停止</button>
-        </div>
+          <button
+            onClick={() => { if (intervalId) clearInterval(intervalId); setRestTimerActive(false) }}
+            className="text-xs text-gray-400 mt-1"
+          >
+            停止
+          </button>
+        </motion.div>
       </div>
 
-      {/* Rest timer trigger button */}
-      <button
+      {/* Rest timer trigger */}
+      <motion.button
+        whileTap={{ scale: 0.9 }}
         onClick={() => (restTimerActive ? setRestTimerActive(false) : startRestTimer())}
-        className="fixed bottom-24 right-4 z-50 w-12 h-12 bg-cyan-500 text-black rounded-full flex items-center justify-center text-sm font-bold shadow-lg active:scale-95 transition-transform"
+        className="fixed bottom-24 right-4 z-50 w-14 h-14 rounded-full flex items-center justify-center text-lg font-bold shadow-lg"
+        style={{
+          background: NEON,
+          color: '#000',
+          boxShadow: `0 0 24px ${NEON}60`,
+        }}
       >
         {restTimerActive ? '⏹' : '⏱'}
-      </button>
+      </motion.button>
     </div>
   )
 }

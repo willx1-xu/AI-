@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import Layout from './components/Layout'
+import DashboardPage from './pages/DashboardPage'
 import TrainingPage from './pages/TrainingPage'
 import DietPage from './pages/DietPage'
 import BodyPage from './pages/BodyPage'
@@ -9,12 +10,13 @@ export default function App() {
   return (
     <Routes>
       <Route element={<Layout />}>
-        <Route path="/" element={<Navigate to="/training" replace />} />
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/training" element={<TrainingPage />} />
         <Route path="/diet" element={<DietPage />} />
         <Route path="/body" element={<BodyPage />} />
         <Route path="/plan" element={<PlanPage />} />
-        <Route path="*" element={<Navigate to="/training" replace />} />
+        <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Route>
     </Routes>
   )
